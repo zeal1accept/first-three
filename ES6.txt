@@ -1,0 +1,245 @@
+ES5内容补充
+严格模式--strict mode
+
+全局声明
+‘use strict’；
+var a=0；
+
+函数模式
+
+function main（）
+｛
+ ‘use strict’；
+｝
+
+1 不允许使用未声明的变量 都要用var声明
+2  函数this 不会指向window
+3 eval作用域   可以对里面的字符串参数进行解析  只能在内部使用
+4 对象里面不能有重复名的属性
+5 严格模式下 函数不可能有同名的形参
+6 有一些保留字 private  protected imples
+
+create 创建新的对象并可以指定原型---可以用来做继承
+var Passat=Object.create（car，｛
+
+brand:{   value:'......'
+              writeable:false
+ }
+｝）
+创建一个passat对象 然后将cat的值全部赋值给passat的原型 然后后面在跟着写Passat自己的属性
+然后里面的值要以对象的形式传入  value 表示值  writeable:false 表示不可以修改 configurable:false  表示属性不可用删除    enumerable:false 表示对象是否可以枚举 是否可以遍历出来
+
+get是一个对象的方法 无需手动调用  该函数的返回值会作为此属性的返回值
+
+set设置 当对属性进行设置的时候会执行  set：function() { }
+后面一般都会跟函数
+比如对Passat里面的price 属性进行调用时 get会自动触发
+当对price进行修改时 set会触发
+
+get set 和value 只能使用一个 不能同时使用
+
+
+defineProperties () ---加属性
+可以实例对象.属性名=属性值
+也可以用 defineProperties () 来加属性
+Object.defineProperties ('实例化对象'，｛
+
+brand: { value:'汽车'  }，
+
+｝)
+也有get  set方法
+
+
+动态属性的练习
+
+bind方法介绍和 apply call----三个方法一般可以改变this指向
+function add （a,b,c）{   
+console.log(this);----这个this指向window
+console.log(a+b+c);
+}
+
+add.call( {  },1,2,3)---也可以进行调用  这个时候this就会指向 
+｛｝这个对象  第一个参数也可以为空
+
+apply 和call的形式差不多 只是后面是一个数组
+add.apply( { },  [1,2,3]);
+
+bind()  也是在修改this的值不过是返回一个新的函数
+返回值为一个新的函数 而且可以修改this的指向
+
+call和apply都会直接调用函数
+bind 只会改变this指向 不会调用函数 会返回一个值 返回的是原函数改变this之后的函数
+
+ECMAScript 6相关概念  ----欧洲计算机制造协会  制定的标准
+----es6为了简化
+
+let关键字
+1 不允许重复声明
+2 块级作用域
+if() {}  else{}  for() {}  {}  函数的大括号不属于范围 属于函数作用域
+
+打个比方
+if(true) {    let  a=123}  console.log(a);---会显示a没有定义 因为let只在｛｝块级作用域里面运行  但是 如果使用var的话 不会报错  所以var会污染全局作用域
+3 不存在变量提升
+4 不影响作用域链  嵌套的时候作用域正常
+
+const用来声明一个常量---值不变
+1 声明的时候一定要赋初始值
+2 常量名称一般用大写
+3 不能修改常量的值---可以修改 数组和对象的值  因为const存储的是数组的地址和对象的地址
+对于基本类型可以用let  对于引用类型数据可以const
+4 不允许重复声明
+5块级作用域
+6 关于数组和对象元素的修改
+
+
+变量的解构赋值
+
+数组一一对应的进行赋值
+const arr=[ '1'，'2'，'3'，'4']
+let [ 'a'，'b'，'c'，'d']=arr；需要一一对应才能进行数组的解构
+
+对象的解构赋值
+const star={  name:'  '    tags:'  '   say:function(){   }}
+let ｛name，tags，say｝=star
+可以将对象里面的属性快速给解构出来这样就可以方便使用了
+
+模板字符串---可以⁪使用反引号对字符串声明！！
+1 可以进行换行 `   `  反引号里面可以直接使用换行符
+2 在字符串中进行变量拼接  ${  }  在反引号里面直接写需要拼接的内容
+
+对象的简化写法
+可以直接写入一个变量 
+let name=‘尚硅谷’；
+let position='beijing';
+const obj={ name，position}
+ES6也允许在对象里面写方法的时候  直接写 improve（）{  }
+不用写 :function() {  }
+
+箭头函数  用箭头来声明函数
+let add =（）=>{   }
+可以直接使用 add（）进行调用 也可以
+add.call({},参数 )
+add.apply( {},参数)
+
+1 this的值是静态的  this的指向不会改变
+this指向为声明时 外层作用域下的this
+2 不能作为构造函数使用
+3 不能使用arguements  保存着所有的实参
+4 箭头函数简写 参数只有一个的时候 可以不写()
+   当执行语句只有一句的时候  不写  {}  return也不会写
+
+filter 数组的一个方法 参数为回调函数 返回值为过滤条件的数组
+返回数组中偶数的元素  如果为true则会返回到新的数组当中
+const result= arr.filter(item=>item%2===0)
+
+回调函数与 this无关的时候 用箭头函数比较合适
+
+
+函数参数的默认值
+具有默认值的位置在形参形参里面都需要靠后
+
+参数的默认值还可以配合着 结构赋值一起使用
+function connect( {host='123.345.2', port,pass })
+{ 
+console.log(host);
+console.log(port);
+console.log(pass);
+}
+
+connect({
+host:344.242.2,
+port:'asd',
+pass:'sdfdg'
+})
+
+
+rest参数---在ES6里面完全取消了arguements
+arguement是一个对象  rest是一个数组可以使用数组的方法
+function main（...rest）{
+console.log(rest);
+
+}
+
+在形参里面声明数组需要前面加上三个点
+
+main(2,1,0);
+ 形参里面也可以 function （a,b,...rest）{  }  ...rest参数必须放在最后
+当针对不定个数的参数时 可以用rest参数
+
+spread扩展运算符   也是...
+数组的展开   ...arr表示对数组的展开
+let arr=[1,2,3];
+...arr=1,2,3
+function （）{
+}
+
+对象的展开
+可以讲对象的属性 解构  然后当作属性放在另一个对象中
+扩展运算符的应用
+1数组的合并
+const a=[1,2,3];
+const b=[4,5,6];
+const hebing=[...a,...b];
+
+2数组的克隆
+
+3将伪数组转换为数组
+queryselectorsAll( )--一把获取的是一个伪数组
+let a=[ ...queryselectorsAll( )]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+迭代器 是一种接口 为不同数据结构提供访问机制---主要指对象
+任何数据只要部署了 lterator接口 就可以完成遍历操作
+
+for of 和for in
+for of拿的主要是值  for in主要拿下标
+
+当我们自定义需要遍历数据的时候 我们需要想到迭代器
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
